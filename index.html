@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List 2</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <main class="todo-app">
+      <div class="todo-app__header">
+        <h1>To-Do List Immutable</h1>
+        <button id="theme-toggle" aria-label="Cambiar tema">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+      </div>
+
+      <div class="todo-app__form">
+        <label for="text__task" class="todo-app__label"><i class="fa-regular fa-file"></i></label>
+        <input type="text" id="text__task" class="todo-app__input" placeholder="Ingrese la tarea..." />
+        <button class="todo-app__button todo-app__button--add" aria-label="Agregar Tarea">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+
+      <ul class="todo-app__list"></ul>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,343 @@
+/* 🌐 Reset base universal */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 🎨 Variables globales para colores, tipografía y espaciado */
+:root {
+  /* 🎯 Colores principales */
+  --color-bg: #f9f9f9;
+  --color-primary: #3a86ff;
+  --color-accent: #8338ec;
+  --color-text: #222;
+  --color-completed: #aaa;
+  --color-error: #ef233c;
+
+  /* 🧍 Tamaños tipográficos */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-large: 1.25rem; /* 20px */
+
+  /* 🧱 Espaciado base */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 1rem; /* 16px */
+  --spacing-lg: 2rem; /* 32px*/
+
+  /* ⛑ Bordes y radios */
+  --border-radius: 0.5rem; /* 8px */
+}
+
+/* 🔧 Estilos base del body */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: "Segoe UI", "Helvetica", sans-serif;
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  min-height: 100vh;
+  padding: var(--spacing-md);
+}
+
+body.dark-mode #theme-toggle i {
+  color: gold;
+}
+
+body:not(.dark-mode) #theme-toggle i {
+  color: var(--color-accent);
+}
+
+/* ****************** Mobile-First ************************* */
+
+/* 🧩 Contenedor principal de la app */
+.todo-app {
+  max-width: 37.5rem; /* 600px */
+  margin: 0 auto;
+  padding: var(--spacing-lg) var(--spacing-md);
+  background-color: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+.todo-app__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.todo-app__header h1 {
+  color: var(--color-primary);
+  font-size: var(--font-size-large);
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+}
+
+#theme-toggle {
+  background-color: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--color-accent);
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+#theme-toggle:hover {
+  transform: scale(1.2);
+}
+
+/* 📦 Bloque del formulario: label, input, y botón agregar */
+.todo-app__form {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.todo-app__label {
+  font-size: 1.25rem;
+  color: var(--color-accent);
+}
+
+.todo-app__input {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  font-size: var(--font-size-base);
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  outline: none;
+}
+
+.todo-app__button {
+  border: none;
+  border-radius: var(--border-radius);
+  color: #fff;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  transition: background-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.todo-app__button--add {
+  background-color: var(--color-primary);
+}
+
+.todo-app__button--add:hover {
+  background-color: var(--color-accent);
+}
+
+.todo-app__button i {
+  font-size: 1rem;
+}
+
+/* 📋 Lista de tareas */
+.todo-app__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* 📌 Tarea individual (`li`) */
+.todo-app__task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+
+  position: relative;
+}
+
+/* ✏️ Texto dentro de la tarea */
+.todo-app__task-text {
+  font-size: var(--font-size-base);
+  flex: 1;
+  margin-right: var(--spacing-md);
+  word-break: break-word;
+}
+
+/* 🟫 Estado textual: completa/incompleta */
+.todo-app__task-status {
+  font-size: 0.85rem;
+  color: var(--color-completed);
+  margin: 1rem;
+}
+
+/* 🎛️ Contenedor de botones internos de la tarea */
+.todo-app__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* 🟩 Estado visual de tarea completada */
+.todo-app__task--completed {
+  text-decoration: none;
+  opacity: 0.6;
+  position: relative;
+}
+
+/* 🧠 Pseudo-elemento para línea de tarea completada */
+.todo-app__task::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transform: translateY(-50%);
+  transition: width 0.6s ease;
+}
+
+.todo-app__task--completed::after {
+  width: 100%;
+}
+
+.todo-app__button--complete {
+  background-color: var(--color-primary);
+}
+
+.todo-app__button--complete:hover {
+  background-color: #265bcc;
+}
+
+.todo-app__button--delete {
+  background-color: var(--color-error);
+}
+
+.todo-app__button--delete:hover {
+  background-color: #c9184a;
+}
+
+/* Estilos para pantallas de 768px (tablets) */
+@media (min-width: 48em) {
+  .todo-app {
+    max-width: 43.75rem; /* 700px */
+    padding: var(--spacing-lg);
+  }
+
+  .todo-app h1 {
+    font-size: 1.75rem; /* 28px */
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .todo-app__form {
+    gap: var(--spacing-md);
+  }
+
+  .todo-app__input {
+    font-size: 1.125rem; /* 18px */
+    padding: 0.75rem 1.25rem;
+  }
+
+  .todo-app__button {
+    font-size: 1.125rem;
+    padding: 0.75rem;
+  }
+
+  .todo-app__task {
+    padding: var(--spacing-md);
+  }
+
+  .todo-app__task:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .todo-app__task-text,
+  .todo-app__task-status {
+    font-size: 1.1rem;
+  }
+
+  .todo-app__list {
+    gap: var(--spacing-md);
+  }
+}
+
+/* Estilos para pantallas de 1024px (monitores grandes) */
+@media (min-width: 64em) {
+  .todo-app {
+    max-width: 56.25rem; /* 900px */
+    padding: var(--spacing-lg) var(--spacing-lg);
+  }
+
+  .todo-app h1 {
+    font-size: 2rem;
+  }
+
+  .todo-app__form {
+    gap: var(--spacing-lg);
+  }
+
+  .todo-app__input {
+    font-size: 1.25rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .todo-app__button {
+    font-size: 1.25rem;
+    padding: 1rem;
+  }
+
+  .todo-app__task {
+    padding: var(--spacing-lg);
+  }
+
+  .todo-app__task-text {
+    font-size: 1.2rem;
+  }
+
+  .todo-app__task-status {
+    font-size: 1.1rem;
+  }
+
+  .todo-app__list {
+    gap: var(--spacing-lg);
+  }
+
+  .todo-app__task:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transform: scale(1.01);
+    transition: all 0.3s ease;
+  }
+}
+
+/* 🕶️ Estilos para modo oscuro activado manualmente con .dark-mode */
+body.dark-mode {
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+}
+
+body.dark-mode .todo-app {
+  background-color: #2a2a2a;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .todo-app__task {
+  background-color: #3a3a3a;
+  border-color: #555;
+}
+
+body.dark-mode .todo-app__input {
+  background-color: #2a2a2a;
+  color: #eee;
+  border-color: #555;
+}
+
+body.dark-mode .todo-app__button {
+  background-color: var(--color-accent);
+}
+
+body.dark-mode .todo-app__button--add:hover {
+  background-color: #265bcc;
+}
+
+body.dark-mode .todo-app__task--completed::after {
+  background-color: #888;
+}
