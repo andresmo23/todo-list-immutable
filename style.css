@@ -216,6 +216,72 @@ body:not(.dark-mode) #theme-toggle i {
   background-color: #c9184a;
 }
 
+.todo-app__button--edit {
+  background-color: darkorange;
+}
+
+.todo-app__button--edit:hover {
+  background-color: rgb(219, 122, 3);
+}
+
+.todo-app__button--prioritize {
+  background-color: rgb(7, 55, 104);
+}
+
+.todo-app__button--prioritize:hover {
+  background-color: rgb(2, 37, 71);
+}
+
+/* ✏️ Contenedor de edición */
+.todo-app__edit-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+/* 📝 Input de edición */
+.todo-app__edit-input {
+  padding: 0.5rem 1rem;
+  font-size: var(--font-size-base);
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  outline: none;
+}
+
+/* 💬 Mensaje de ayuda */
+.todo-app__edit-help {
+  font-size: 0.85rem;
+  color: var(--color-completed);
+}
+
+/* ❌ Botón cancelar */
+.todo-app__button--cancel {
+  background-color: #999;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.todo-app__button--cancel:hover {
+  background-color: #666;
+}
+
+/* 📌 Estilo para tarea priorizada */
+.todo-app__task--prioritized {
+  background-color: #fffbea;
+  border: 2px solid var(--color-accent);
+  box-shadow: 0 0 4px rgba(131, 56, 236, 0.4);
+  position: relative;
+}
+
+.todo-app__task--prioritized::before {
+  content: "📍";
+  position: absolute;
+  left: 0.75rem;
+  top: 0.75rem;
+  font-size: 1.2rem;
+}
+
 /* Estilos para pantallas de 768px (tablets) */
 @media (min-width: 48em) {
   .todo-app {

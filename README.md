@@ -28,12 +28,33 @@ Crearé y usaré la primera y despues refactorizaré y cambiaré a la segunda pa
 ### 3.4.2 Versión genérica
 - Esta separa la lógica de construcción de cada botón, y usa una función plantilla para crear cualquier botón que quiera. 
 
-### 3.5 Funcion para guardar tareas en el localstorage
+### 3.5 Función para editar texto 
+- Esta funcionalidad permite modificar el texto de una tarea existente.
+- - Al hacer clic en el botón  *Editar*, el texto de la tarea se convierte en un campo de entrada (`input`)
+- El usuario puede escribir el nuevo texto directamente
+- Para guardar los cambios, debe presionar la tecla *Enter*
+- El sistema actualiza la tarea en el arreglo, guarda en `localStorage` y vuelve a renderizar la lista
+- Si el campo queda vacío, no se guarda el cambio
+
+## 3.6 Función parapPriorizar tarea
+- Permite destacar una tarea importante, mostrándola al principio de la lista.
+- Al hacer clic en el botón "Priorizar", la tarea seleccionada recibe la propiedad `prioritized: true`.
+- El arreglo de tareas se actualiza y se ordena para que las tareas priorizadas aparezcan primero.
+- Se guarda el nuevo orden en `localStorage` y se actualiza la vista.
+- Se utiliza `.map()` para mantener la inmutabilidad y modificar solo la tarea elegida.
+- Luego se utiliza `.sort()` para reorganizar el array según la propiedad `prioritized`.
+- Esta estructura permite mantener un código limpio, predecible y fácil de escalar.
+- La aplicación reordena las tareas automáticamente al priorizar o despriorizar:
+- Las tareas con `prioritized: true` se muestran primero
+- Las tareas sin prioridad se ordenan por fecha de creación, manteniendo el orden original
+- Esto se logra usando una función comparadora en `.sort()` que considera ambas propiedades (`prioritized` y `createdAt`).
+
+### 3.7 Funcion para guardar tareas en el localstorage
 - Se usa la función `saveTasksToStorage()` para guardar el estado global `tasks` en `localStorage`.
 - Convierte el array en texto con `JSON.stringify()` para que pueda almacenarse.
 - Se ejecuta cada vez que se agrega, elimina o actualiza una tarea.
 
-### 3.6 Funcion para cargar tareas del localstorage
+### 3.8 Funcion para cargar tareas del localstorage
 - localStorage.getItem("tasks"): busca si hay algo guardado con la clave "tasks". Saved ? JSON.parse(saved) : []: si sí hay algo, lo convierte de string a objeto usando JSON.parse(). Si no hay nada guardado (como en tu primera carga), devuelve un array vacío.
 
 ### 4 Funciones UI

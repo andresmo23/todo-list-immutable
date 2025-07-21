@@ -17,6 +17,8 @@ function addTask(taskText) {
     id: crypto.randomUUID(),
     text: taskText,
     completed: false,
+    prioritized: false,
+    createdAt: new Date().getTime(),
   };
 
   return [...tasks, newTask];
@@ -32,29 +34,82 @@ function toggleTaskCompleted(taskId) {
   return tasks.map((task) => (task.id === taskId ? { ...task, completed: !task.completed } : task));
 }
 
-// función: crear botones de acción para cada tarea (completar y eliminar) (especifico)
-function createTaskButtons(taskId) {
-  const buttonContainer = document.createElement("div");
-  buttonContainer.classList.add("todo-app__actions");
+// función: actualizar el texto de una tarea
+function updateTaskText(tasksArray, taskId, newText) {
+  return tasksArray.map((task) => (task.id === taskId ? { ...task, text: newText } : task));
+}
 
-  const completeBtn = document.createElement("button");
-  completeBtn.classList.add("todo-app__button", "todo-app__button--complete");
-  completeBtn.setAttribute("aria-label", "Completar tarea");
-  completeBtn.dataset.name = "complete";
-  completeBtn.dataset.id = taskId;
-  completeBtn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+// función: cambiar el estado priorizado del objeto tarea
+function togglePrioritized(tasksArray, taskId) {
+  const updatedArray = tasksArray.map((task) =>
+    task.id === taskId ? { ...task, prioritized: !task.prioritized } : task
+  );
 
-  const deleteBtn = document.createElement("button");
-  deleteBtn.classList.add("todo-app__button", "todo-app__button--delete");
-  deleteBtn.setAttribute("aria-label", "Eliminar tarea");
-  deleteBtn.dataset.name = "delete";
-  deleteBtn.dataset.id = taskId;
-  deleteBtn.innerHTML = `<i class="fa-solid fa-trash"></i>`;
+  const sortedArray = updatedArray.sort((a, b) => {
+    if (a.prioritized !== b.prioritized) {
+      return (b.prioritized ? 1 : 0) - (a.prioritized ? 1 : 0);
+    }
 
-  buttonContainer.appendChild(completeBtn);
-  buttonContainer.appendChild(deleteBtn);
+    return a.createdAt - b.createdAt;
+  });
 
-  return buttonContainer;
+  return sortedArray;
+}
+
+// función: crear botón genérico basado en parámetros
+function createButton(label, className, name, taskId, iconHTML) {
+  const button = document.createElement("button");
+  button.classList.add("todo-app__button", className);
+  button.setAttribute("aria-label", label);
+  button.dataset.name = name;
+  button.dataset.id = taskId;
+  button.innerHTML = iconHTML;
+  return button;
+}
+
+// función: genera los botones llamando a createButton() y pasandole los argumentos propios
+function generateTaskButtons(taskId) {
+  const completeButton = createButton(
+    "Tarea completada",
+    "todo-app__button--complete",
+    "complete",
+    taskId,
+    `<i class="fa-solid fa-check"></i>`
+  );
+
+  const deleteButton = createButton(
+    "Eliminar tarea",
+    "todo-app__button--delete",
+    "delete",
+    taskId,
+    `<i class="fa-solid fa-trash"></i>`
+  );
+
+  const editButton = createButton(
+    "Editar tarea",
+    "todo-app__button--edit",
+    "edit",
+    taskId,
+    `<i class="fa-solid fa-pen-to-square"></i>`
+  );
+
+  const prioritizeButton = createButton(
+    "Priorizar tarea",
+    "todo-app__button--prioritize",
+    "prioritize",
+    taskId,
+    `<i class="fa-solid fa-arrow-up"></i>`
+  );
+
+  const actionContainer = document.createElement("div");
+  actionContainer.classList.add("todo-app__actions");
+
+  actionContainer.appendChild(completeButton);
+  actionContainer.appendChild(deleteButton);
+  actionContainer.appendChild(editButton);
+  actionContainer.appendChild(prioritizeButton);
+
+  return actionContainer;
 }
 
 // funciones de almacenamiento
@@ -70,18 +125,6 @@ function loadTasksFromStorage() {
   return saved ? JSON.parse(saved) : [];
 }
 
-// TODO: esta función y los demas componentes necesarios se utilizarán en otra rama
-// función: crear botón genérico basado en parámetros
-/* function createButton(label, className, name, taskId, iconHTML) {
-  const button = document.createElement("button");
-  button.classList.add("todo-app__button", className);
-  button.setAttribute("aria-label", label);
-  button.name = name;
-  button.dataset.id = taskId;
-  button.innerHTML = iconHTML;
-  return button;
-} */
-
 // funciones de UI
 
 // función: renderiza todas las tareas en la interfaz
@@ -93,8 +136,6 @@ function renderTasks() {
     taskItem.classList.add("todo-app__task");
     taskItem.setAttribute("role", "listitem");
     taskItem.dataset.id = task.id;
-
-    // console.log("Render #", task.text, task.completed);
 
     const textLabel = document.createElement("span");
     textLabel.classList.add("todo-app__task-text");
@@ -110,11 +151,15 @@ function renderTasks() {
       }, 10);
     }
 
+    if (task.prioritized) {
+      taskItem.classList.add("todo-app__task--prioritized");
+    }
+
     const statusLabel = document.createElement("span");
     statusLabel.classList.add("todo-app__task-status");
     statusLabel.textContent = task.completed ? "Completa" : "Incompleta";
 
-    const buttonsContainer = createTaskButtons(task.id);
+    const buttonsContainer = generateTaskButtons(task.id);
 
     taskItem.appendChild(textLabel);
     taskItem.appendChild(statusLabel);
@@ -209,6 +254,56 @@ taskList.addEventListener("click", (event) => {
     const task = tasks.find((t) => t.id === taskId);
     statusLabel.textContent = task.completed ? "Completa" : "Incompleta";
 
+    return;
+  }
+
+  if (action === "edit") {
+    const li = button.closest("li");
+    const taskText = li.querySelector(".todo-app__task-text").textContent;
+
+    const input = document.createElement("input");
+    input.value = taskText;
+    input.classList.add("todo-app__edit-input");
+
+    const helpText = document.createElement("span");
+    helpText.classList.add("todo-app__edit-help");
+    helpText.textContent = "Presiona Enter para guardar o haz clic en cancelar";
+
+    const cancelButton = document.createElement("button");
+    cancelButton.classList.add("todo-app__button", "todo-app__button--cancel");
+    cancelButton.setAttribute("aria-label", "Cancelar edición");
+    cancelButton.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+
+    const editContainer = document.createElement("div");
+    editContainer.classList.add("todo-app__edit-container");
+
+    editContainer.appendChild(input);
+    editContainer.appendChild(helpText);
+    editContainer.appendChild(cancelButton);
+
+    li.replaceChild(editContainer, li.querySelector(".todo-app__task-text"));
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const newText = input.value.trim();
+        if (newText === "") {
+          showErrorMessage("No puedes guardar una tarea vacía.");
+          return;
+        }
+
+        tasks = updateTaskText(tasks, taskId, newText);
+        saveTasksToStorage();
+        renderTasks();
+      }
+    });
+
+    cancelButton.addEventListener("click", () => renderTasks());
+  }
+
+  if (action === "prioritize") {
+    tasks = togglePrioritized(tasks, taskId);
+    saveTasksToStorage();
+    renderTasks();
     return;
   }
 });
